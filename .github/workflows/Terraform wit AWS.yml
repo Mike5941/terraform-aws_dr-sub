@@ -34,7 +34,7 @@ jobs:
 
       - name: Network/Terraform Plan
         id: network-plan
-        run: terraform apply
+        run: terraform apply -auto-approve
         working-directory: ./network/primary
 
 #      - name: Terraform Init

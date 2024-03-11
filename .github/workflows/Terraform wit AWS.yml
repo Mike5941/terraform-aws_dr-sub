@@ -31,3 +31,4 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: ./network/primary
+

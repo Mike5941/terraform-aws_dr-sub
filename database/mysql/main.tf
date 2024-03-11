@@ -11,12 +11,12 @@ terraform {
 
 provider "aws" {
   region = "ap-northeast-2"
-  alias = "primary"
+  alias = "seoul"
 }
 
 provider "aws" {
   region = "ap-northeast-1"
-  alias = "secondary"
+  alias = "tokyo"
 }
 
 module "db_secrets" {
@@ -28,7 +28,7 @@ module "primary" {
   source = "github.com/mike5941/aws_dr-modules//modules/database/mysql"
 
   providers ={
-    aws = aws.primary
+    aws = aws.seoul
   }
 
   vpc_remote_state_bucket = "terraform-wonsoong"

@@ -11,19 +11,19 @@ terraform {
 
 provider "aws" {
   region = "ap-northeast-1"
-  alias  = "secondary"
+  alias  = "tokyo"
 }
 
 provider "aws" {
   region = "ap-northeast-2"
-  alias  = "primary"
+  alias  = "seoul"
 }
 
 module "main_zone" {
   source = "github.com/mike5941/aws_dr-modules//modules/network"
 
   providers = {
-    aws = aws.primary
+    aws = aws.seoul
   }
 
   project_name   = "WEB-Primary"

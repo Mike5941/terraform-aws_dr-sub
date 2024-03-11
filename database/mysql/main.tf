@@ -21,11 +21,11 @@ provider "aws" {
 
 module "db_secrets" {
   source      = "../../../global/secrets"
-  secret_name = "MyDatabaseSecret"
+  secret_name = "prod/database/MySQL"
 }
 
 module "primary" {
-  source = "../../../modules/database/mysql"
+  source = "github.com/mike5941/aws_dr-modules//modules/database/mysql"
 
   providers ={
     aws = aws.primary
@@ -34,7 +34,7 @@ module "primary" {
   vpc_remote_state_bucket = "terraform-wonsoong"
   vpc_remote_state_key    = "prod/vpc/primary/terraform.tfstate"
 
-  db_name              = "bottari"
+  db_name              = "mydatabase"
   backup_retention_period = 1
 
   db_username = module.db_secrets.db_credentials["username"]

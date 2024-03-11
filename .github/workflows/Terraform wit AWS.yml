@@ -1,14 +1,15 @@
-name: Provisioning with Terraform after signing in to AWS
+name: Conditional Terraform Actions
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       action:
         description: 'Action to perform (apply or destroy)'
         required: true
         default: 'apply'
+      resource:
+        description: 'Resource to target (all, network, database)'
+        required: true
+        default: 'all'
 
 permissions:
   id-token: write
@@ -18,13 +19,6 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          role-session-name: GitHubActions
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -33,35 +27,32 @@ jobs:
         with:
           terraform_version: latest
 
-      # Apply for Network
-      - name: Network/Terraform Init (Apply)
-        if: github.event.inputs.action == 'apply'
-        run: terraform init
-        working-directory: ./network/primary
-
+      # Network Resource Actions
       - name: Network/Terraform Apply
-        if: github.event.inputs.action == 'apply'
-        run: terraform apply -auto-approve
+        if: github.event.inputs.action == 'apply' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'network')
+        run: |
+          terraform init -backend-config=./network/primary
+          terraform apply -auto-approve
         working-directory: ./network/primary
-
-      # Apply for Database
-      - name: Database/Terraform Init (Apply)
-        if: github.event.inputs.action == 'apply'
-        run: terraform init
-        working-directory: ./database/mysql
-
-      - name: Database/Terraform Apply
-        if: github.event.inputs.action == 'apply'
-        run: terraform apply -auto-approve
-        working-directory: ./database/mysql
-
-      # Destroy in reverse order: Database first, then Network
-      - name: Database/Terraform Destroy
-        if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve
-        working-directory: ./database/mysql
 
       - name: Network/Terraform Destroy
-        if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve
+        if: github.event.inputs.action == 'destroy' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'network')
+        run: |
+          terraform init -backend-config=./network/primary
+          terraform destroy -auto-approve
         working-directory: ./network/primary
+
+      # Database Resource Actions
+      - name: Database/Terraform Apply
+        if: github.event.inputs.action == 'apply' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'database')
+        run: |
+          terraform init -backend-config=./database/mysql
+          terraform apply -auto-approve
+        working-directory: ./database/mysql
+
+      - name: Database/Terraform Destroy
+        if: github.event.inputs.action == 'destroy' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'database')
+        run: |
+          terraform init -backend-config=./database/mysql
+          terraform destroy -auto-approve
+        working-directory: ./database/mysql

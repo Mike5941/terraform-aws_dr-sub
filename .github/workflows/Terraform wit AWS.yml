@@ -56,3 +56,4 @@ jobs:
           terraform init -migrate-state
           terraform destroy -auto-approve -lock=false
         working-directory: ./network/primary
+

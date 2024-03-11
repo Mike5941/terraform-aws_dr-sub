@@ -20,7 +20,7 @@ provider "aws" {
 }
 
 module "main_zone" {
-  source = "../../../modules/network"
+  source = "github.com/mike5941/aws_dr-modules//modules/network"
 
   providers = {
     aws = aws.seoul

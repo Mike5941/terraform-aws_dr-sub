@@ -5,17 +5,14 @@ permissions:
       id-token: write
       contents: read
 
-env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}
 jobs:
   terraform:
     runs-on: ubuntu-latest
     steps:
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: {{ secrets.AWS_REGION }}
+          aws-region: ap-northeast-2
           role-to-assume: {{ secrets.AWS_ROLE_ARN }}
           role-session-name: GitHubActions
 

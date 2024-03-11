@@ -20,7 +20,7 @@ provider "aws" {
 }
 
 module "db_secrets" {
-  source      = "../../../global/secrets"
+  source      = "github.com/mike5941/aws_dr-modules//global/secrets"
   secret_name = "prod/database/MySQL"
 }
 

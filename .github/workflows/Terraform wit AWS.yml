@@ -37,22 +37,25 @@ jobs:
         working-directory: ./network/primary
 
   database:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+    needs: network
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: latest
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
 
-    - name: Terraform Init
-      id: init
-      env:
-        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-        AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
-      run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
-      working-directory: ./database/mysql
+      - name: Terraform Init
+        id: init
+        env:
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
+        run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}"
+        working-directory: ./database/mysql
 
-    - name: Terraform Plan
-      run: terraform plan -out=tfplan
-      working-directory: ./database/mysql
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: ./database/mysql

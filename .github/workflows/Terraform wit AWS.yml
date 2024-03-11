@@ -34,7 +34,7 @@ jobs:
 
       - name: Network/Terraform Plan
         id: network-plan
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -unlock d19d3ea4-a735-646e-1f8c-c63318da2364
         working-directory: ./network/primary
 
 #      - name: Terraform Init

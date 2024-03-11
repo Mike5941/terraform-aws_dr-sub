@@ -31,28 +31,29 @@ jobs:
       - name: Network/Terraform Apply
         if: github.event.inputs.action == 'apply' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'network')
         run: |
-          terraform init -backend-config=./network/primary
-          terraform apply -auto-approve
-        working-directory: ./network/primary
-
-      - name: Network/Terraform Destroy
-        if: github.event.inputs.action == 'destroy' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'network')
-        run: |
-          terraform init -backend-config=./network/primary
-          terraform destroy -auto-approve
+          terraform init -migrate-state
+          terraform plan -auto-approve -lock=false
         working-directory: ./network/primary
 
       # Database Resource Actions
       - name: Database/Terraform Apply
         if: github.event.inputs.action == 'apply' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'database')
         run: |
-          terraform init -backend-config=./database/mysql
-          terraform apply -auto-approve
+          terraform init -migrate-state
+          terraform plan -auto-approve -lock=false
         working-directory: ./database/mysql
 
       - name: Database/Terraform Destroy
         if: github.event.inputs.action == 'destroy' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'database')
         run: |
-          terraform init -backend-config=./database/mysql
-          terraform destroy -auto-approve
+          terraform init -migrate-state
+          terraform destroy -auto-approve -lock=false
         working-directory: ./database/mysql
+
+      - name: Network/Terraform Destroy
+        if: github.event.inputs.action == 'destroy' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'network')
+        run: |
+          terraform init -migrate-state
+          terraform destroy -auto-approve -lock=false
+        working-directory: ./network/primary
+

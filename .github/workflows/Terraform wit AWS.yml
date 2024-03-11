@@ -1,12 +1,21 @@
 name: Provisioning with Terraform after signing in to AWS
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform (apply or destroy)'
+        required: true
+        default: 'apply'
 
 permissions:
-      id-token: write
-      contents: read
+  id-token: write
+  contents: read
 
 jobs:
-  network:
+  terraform:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials
@@ -24,27 +33,35 @@ jobs:
         with:
           terraform_version: latest
 
-      - name: Network/Terraform Init
-        id: network-init
-        env:
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
+      # Apply for Network
+      - name: Network/Terraform Init (Apply)
+        if: github.event.inputs.action == 'apply'
         run: terraform init
         working-directory: ./network/primary
 
-      - name: Network/Terraform Plan
-        id: network-plan
-        run: terraform destroy -auto-approve -lock=false
+      - name: Network/Terraform Apply
+        if: github.event.inputs.action == 'apply'
+        run: terraform apply -auto-approve
         working-directory: ./network/primary
 
-      - name: Terraform Init
-        id: init
-        env:
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
+      # Apply for Database
+      - name: Database/Terraform Init (Apply)
+        if: github.event.inputs.action == 'apply'
         run: terraform init
         working-directory: ./database/mysql
 
-      - name: Terraform Plan
-        run: terraform destroy -auto-approve -lock=false
+      - name: Database/Terraform Apply
+        if: github.event.inputs.action == 'apply'
+        run: terraform apply -auto-approve
         working-directory: ./database/mysql
+
+      # Destroy in reverse order: Database first, then Network
+      - name: Database/Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
+        working-directory: ./database/mysql
+
+      - name: Network/Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
+        working-directory: ./network/primary

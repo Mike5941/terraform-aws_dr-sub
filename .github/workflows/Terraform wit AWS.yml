@@ -39,7 +39,7 @@ jobs:
         if: github.event.inputs.action == 'apply' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'network')
         run: |
           terraform init
-          terraform plan -auto-approve
+          terraform plan
         working-directory: ./network/primary
 
 
@@ -48,14 +48,14 @@ jobs:
         if: github.event.inputs.action == 'apply' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'database')
         run: |
           terraform init
-          terraform plan -auto-approve
+          terraform plan
         working-directory: ./database/mysql
 
       - name: Database/Terraform Destroy
         if: github.event.inputs.action == 'destroy' && (github.event.inputs.resource == 'all' || github.event.inputs.resource == 'database')
         run: |
           terraform init
-          terraform destroy -auto-approve
+          terraform destroy
         working-directory: ./database/mysql
 
       - name: Network/Terraform Destroy

@@ -1,5 +1,15 @@
 name: Provisioning with Terraform after signing in to AWS
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform (apply or destroy)'
+        required: true
+        default: 'apply'
+      resource:
+        description: 'Resource to target (all, network, database)'
+        required: true
+        default: 'all'
 
 permissions:
       id-token: write

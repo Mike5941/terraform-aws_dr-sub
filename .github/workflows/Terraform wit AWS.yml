@@ -34,7 +34,7 @@ jobs:
 
       - name: Network/Terraform Plan
         id: network-plan
-        run: terraform destroy -auto-approve -lock=false
+        run: terraform apply -auto-approve -lock=false
         working-directory: ./network/primary
 
       - name: Terraform Init

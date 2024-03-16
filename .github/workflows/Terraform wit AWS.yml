@@ -1,4 +1,4 @@
-name: Provisioning with Terraform after signing in to AWS
+name: Configure OIDC
 on:
   - push
 

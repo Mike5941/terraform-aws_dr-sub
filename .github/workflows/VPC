@@ -1,0 +1,21 @@
+name: Deploy VPC
+on:
+  - push
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  OIDC:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: GitHubActions
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4

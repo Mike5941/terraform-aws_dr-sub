@@ -49,6 +49,6 @@ jobs:
         continue-on-error: true
 
       - name: Terraform Destroy
-        if: ${{ steps.apply.outcome == 'failure' }}
+        if: ${{ failure() }}
         run: terraform destroy -auto-approve
         working-directory: ./prod/network/primary

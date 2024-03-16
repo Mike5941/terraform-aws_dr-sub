@@ -7,7 +7,7 @@ permissions:
       contents: read
 
 jobs:
-  network:
+  OIDC:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials

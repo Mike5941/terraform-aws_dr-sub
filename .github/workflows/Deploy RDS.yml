@@ -1,10 +1,10 @@
-name: Create VPC
+name: Create RDS
 on:
-  push
-
-permissions:
-  id-token: write
-  contents: read
+  workflow_run:
+    workflows: ["Create VPC"]
+    types:
+      - completed
+    branches: [main]
 
 jobs:
   VPC:
@@ -27,8 +27,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./prod/network/primary
+        working-directory: ./prod/database/mysql
 
       - name: Terraform plan
         run: terraform plan
-        working-directory: ./prod/network/primary
+        working-directory: ./prod/network/mysql

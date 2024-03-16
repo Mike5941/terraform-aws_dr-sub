@@ -28,4 +28,7 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: ./prod/network/primary
-        
+
+      - name: Terraform plan
+        run: terraform plan
+        working-directory: ./prod/network/primary

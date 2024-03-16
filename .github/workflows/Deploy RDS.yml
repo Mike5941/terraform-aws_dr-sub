@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  VPC:
+  RDS:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials
@@ -35,4 +35,4 @@ jobs:
 
       - name: Terraform plan
         run: terraform plan
-        working-directory: ./prod/network/mysql
+        working-directory: ./prod/database/database

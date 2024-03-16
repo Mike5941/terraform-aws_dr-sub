@@ -1,4 +1,4 @@
-name: VPC
+name: Create VPC
 on:
   workflow_run:
     workflows: ["Provisioning with Terraform after signing in to AWS"]
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  network:
+  VPC:
     runs-on:ubuntu-latest
     steps:
       - name: Configure AWS Credentials

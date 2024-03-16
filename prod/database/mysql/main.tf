@@ -20,13 +20,13 @@ provider "aws" {
 }
 
 module "db_secrets" {
-  source      = "../../../global/secrets"
+  source      = "github.com/Mike5941/aws_dr-sub//global/secrets"
   secret_name = "MyDatabaseSecret"
 }
 
 
 module "primary" {
-  source = "../../../../modules/database/mysql"
+  source = "github.com/Mike5941/aws_dr-modules//modules/database/mysql"
 
   providers = {
     aws = aws.primary
@@ -43,7 +43,7 @@ module "primary" {
 }
 
 module "secondary" {
-  source = "../../../../modules/database/mysql"
+  source = "github.com/Mike5941/aws_dr-modules//modules/database/mysql"
 
   providers = {
     aws = aws.secondary

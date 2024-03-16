@@ -1,7 +1,7 @@
 name: Create VPC
 on:
   workflow_run:
-    workflows: ["Provisioning with Terraform after signing in to AWS"]
+    workflows: ["Configure OIDC"]
     branches: [main]
     types:
       - completed

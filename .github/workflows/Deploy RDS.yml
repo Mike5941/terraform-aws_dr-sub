@@ -33,6 +33,20 @@ jobs:
         run: terraform init
         working-directory: ./prod/database/mysql
 
-      - name: Terraform plan
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./prod/database/mysql
+
+      - name: Terraform Format
+        run: terraform fmt -check
+        working-directory: ./prod/database/mysql
+
+
+      - name: Terraform Plan
         run: terraform plan
-        working-directory: ./prod/database/database
+        working-directory: ./prod/database/mysql
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+        working-directory: ./prod/database/mysql

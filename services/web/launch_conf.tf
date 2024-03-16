@@ -19,6 +19,11 @@ provider "aws" {
   alias = "secondary"
 }
 
+module "db_secrets" {
+  source      = "../../../global/secrets"
+  secret_name = "MyDatabaseSecret"
+}
+
 data "terraform_remote_state" "db" {
   backend = "s3"
 
@@ -64,7 +69,3 @@ module "primary_webserver" {
 #  db_port = data.terraform_remote_state.db.outputs.secondary_port
 #}
 
-module "db_secrets" {
-  source      = "../../../global/secrets"
-  secret_name = "MyDatabaseSecret"
-}

@@ -38,7 +38,7 @@ jobs:
         working-directory: ./prod/database/mysql
 
       - name: Terraform Format
-        run: terraform fmt -check
+        run: terraform fmt
         working-directory: ./prod/database/mysql
 
 

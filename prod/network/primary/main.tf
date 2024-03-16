@@ -10,7 +10,7 @@ terraform {
 }
 
 module "primary" {
-    source = "github.com/Mike5941/aws_dr-modules//modules/network"
+  source = "github.com/Mike5941/aws_dr-modules//modules/network"
 
 
   project_name = "primary"

@@ -46,3 +46,9 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
         working-directory: ./prod/network/primary
+        continue-on-error: true
+
+      - name: Terraform Destroy
+        if: ${{ steps.apply.outcome == 'failure' }}
+        run: terraform destroy -auto-approve
+        working-directory: ./prod/network/primary

@@ -1,7 +1,7 @@
 name: Destroy RDS
 on:
   workflow_run:
-    workflows: ["Destroy WAS"]
+    workflows: ["Destroy WAS.yml"]
     types:
       - completed
     branches: [main]

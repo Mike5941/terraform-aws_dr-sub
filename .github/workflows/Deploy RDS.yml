@@ -49,5 +49,5 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve
         working-directory: ./prod/database/mysql

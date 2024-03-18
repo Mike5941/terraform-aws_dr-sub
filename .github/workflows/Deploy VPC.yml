@@ -45,7 +45,7 @@ jobs:
       - name: Terraform Apply
         id: prev
         if: github.ref == 'refs/heads/main'
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve
         working-directory: ./prod/network/primary
         continue-on-error: true
 

@@ -1,7 +1,7 @@
-name: Create WAS
+name: Create RDS
 on:
   workflow_run:
-    workflows: ["Create RDS"]
+    workflows: ["Create WAS"]
     types:
       - completed
     branches: [main]
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  WAS:
+  RDS:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
@@ -32,22 +32,21 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/database/mysql
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/database/mysql
 
       - name: Terraform Format
         run: terraform fmt
-        working-directory: ./prod/services/web/primary
-
+        working-directory: ./prod/database/mysql
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/database/mysql
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve
-        working-directory: ./prod/services/web/primary
+        run: terraform destroy -auto-approve
+        working-directory: ./prod/database/mysql

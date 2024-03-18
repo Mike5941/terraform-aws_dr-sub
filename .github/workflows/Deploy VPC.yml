@@ -1,6 +1,10 @@
 name: Create VPC
 on:
-  push
+  workflow_run:
+    workflows: ["Create RDS"]
+    types:
+      - completed
+    branches: [main]
 
 permissions:
   id-token: write
@@ -9,6 +13,7 @@ permissions:
 jobs:
   VPC:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -33,7 +38,6 @@ jobs:
         run: terraform validate
         working-directory: ./prod/network/primary
 
-
       - name: Terraform Format
         run: terraform fmt
         working-directory: ./prod/network/primary
@@ -45,7 +49,7 @@ jobs:
       - name: Terraform Apply
         id: prev
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve
+        run: terraform destroy -auto-approve
         working-directory: ./prod/network/primary
         continue-on-error: true
 

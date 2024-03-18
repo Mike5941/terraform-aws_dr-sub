@@ -32,22 +32,22 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./prod/cache/primary
+        working-directory: ./prod/cache/memcached/primary
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./prod/cache/primary
+        working-directory: ./prod/cache/memcached/primary
 
       - name: Terraform Format
         run: terraform fmt
-        working-directory: ./prod/cache/primary
+        working-directory: ./prod/cache/memcached/primary
 
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./prod/cache/primary
+        working-directory: ./prod/cache/memcached/primary
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform destroy -auto-approve
-        working-directory: ./prod/cache/primary
+        run: terraform apply -auto-approve
+        working-directory: ./prod/cache/memcached/primary

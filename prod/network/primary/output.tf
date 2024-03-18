@@ -32,8 +32,8 @@ output "cache_subnet_group" {
   value       = module.primary.cache_subnet_groups
 }
 
-output "vpn_endpoint_id" {
-  value = aws_ec2_client_vpn_endpoint.vpn.id
-}
+#output "vpn_endpoint_id" {
+#  value = aws_ec2_client_vpn_endpoint.vpn.id
+#}
 
 

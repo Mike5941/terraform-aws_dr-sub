@@ -1,4 +1,5 @@
 name: Destroy VPC
+
 on:
   workflow_run:
     workflows: ["Destroy RDS"]

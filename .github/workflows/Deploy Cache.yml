@@ -1,10 +1,6 @@
 name: Create Cache
 on:
-  workflow_run:
-    workflows: ["Create WAS"]
-    types:
-      - completed
-    branches: [main]
+  push
 
 permissions:
   id-token: write

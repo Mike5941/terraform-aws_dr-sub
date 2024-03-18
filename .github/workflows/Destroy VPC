@@ -1,19 +1,13 @@
-name: Create WAS
+name: Destroy VPC
 on:
   workflow_run:
-    workflows: ["Create RDS"]
+    workflows: ["Destroy RDS"]
     types:
       - completed
     branches: [main]
-
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
-  WAS:
+  VPC:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -32,22 +26,29 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/network/primary
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/network/primary
+
 
       - name: Terraform Format
         run: terraform fmt
-        working-directory: ./prod/services/web/primary
-
+        working-directory: ./prod/network/primary
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/network/primary
 
       - name: Terraform Apply
+        id: prev
         if: github.ref == 'refs/heads/main'
         run: terraform destroy -auto-approve
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/network/primary
+        continue-on-error: true
+
+#      - name: Terraform Destroy
+#        if: failure() && steps.prev.outcome == 'failure'
+#        run: terraform destroy -auto-approve
+#        working-directory: ./prod/network/primary

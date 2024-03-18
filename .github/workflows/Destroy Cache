@@ -1,17 +1,13 @@
-name: Create WAS
+name: Destroy Cache
 on:
-  workflow_run:
-    workflows: ["Create RDS"]
-    types:
-      - completed
-    branches: [main]
+  push
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  WAS:
+  Cache:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
@@ -32,22 +28,22 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/cache/primary
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/cache/primary
 
       - name: Terraform Format
         run: terraform fmt
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/cache/primary
 
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/cache/primary
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform destroy -auto-approve
-        working-directory: ./prod/services/web/primary
+        working-directory: ./prod/cache/primary

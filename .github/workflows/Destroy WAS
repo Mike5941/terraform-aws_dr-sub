@@ -1,7 +1,7 @@
-name: Create WAS
+name: Destroy WAS
 on:
   workflow_run:
-    workflows: ["Create RDS"]
+    workflows: ["Destroy Cache"]
     types:
       - completed
     branches: [main]

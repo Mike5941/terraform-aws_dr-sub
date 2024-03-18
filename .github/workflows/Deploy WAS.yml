@@ -1,0 +1,52 @@
+name: Create WAS
+on:
+  workflow_run:
+    workflows: ["Create RDS"]
+    types:
+      - completed
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  RDS:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: GitHubActions
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./prod/services/web/primary
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./prod/services/web/primary
+
+      - name: Terraform Format
+        run: terraform fmt
+        working-directory: ./prod/services/web/primary
+
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ./prod/services/web/primary
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform destroy -auto-approve
+        working-directory: ./prod/services/web/primary

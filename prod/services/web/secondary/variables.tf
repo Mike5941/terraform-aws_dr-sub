@@ -3,7 +3,7 @@ data "terraform_remote_state" "db" {
 
   config = {
     bucket = "terraform-wonsoong"
-    key    = "stage/database/mysql/terraform.tfstate"
+    key    = "prod/database/mysql/terraform.tfstate"
     region = "ap-northeast-2"
   }
 }

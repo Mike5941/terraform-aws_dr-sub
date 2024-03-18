@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "terraform-wonsoong"
-    key    = "stage/database/mysql/terraform.tfstate"
+    key    = "prod/database/mysql/terraform.tfstate"
     region = "ap-northeast-2"
 
     dynamodb_table = "terraform-wonsoong"
@@ -32,8 +32,8 @@ module "primary" {
     aws = aws.primary
   }
 
-  vpc_remote_state_key = "stage/network/primary/terraform.tfstate"
-#  web_remote_state_key = "stage/services/web/primary/terraform.tfstate"
+  vpc_remote_state_key = "prod/network/primary/terraform.tfstate"
+#  web_remote_state_key = "prod/services/web/primary/terraform.tfstate"
 
   db_name                 = "wordpress_db"
   backup_retention_period = 1
@@ -42,14 +42,14 @@ module "primary" {
   db_password = module.db_secrets.db_credentials["password"]
 }
 
-module "secondary" {
-  source = "github.com/Mike5941/aws_dr-modules//modules/database/mysql"
-
-  providers = {
-    aws = aws.secondary
-  }
-
-  vpc_remote_state_key = "stage/network/secondary/terraform.tfstate"
-
-  replicate_source_db = module.primary.arn
-}
+#module "secondary" {
+#  source = "github.com/Mike5941/aws_dr-modules//modules/database/mysql"
+#
+#  providers = {
+#    aws = aws.secondary
+#  }
+#
+#  vpc_remote_state_key = "prod/network/secondary/terraform.tfstate"
+#
+#  replicate_source_db = module.primary.arn
+#}

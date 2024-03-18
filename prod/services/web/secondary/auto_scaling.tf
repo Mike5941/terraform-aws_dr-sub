@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "terraform-wonsoong"
-    key    = "stage/services/web/secondary/terraform.tfstate"
+    key    = "prod/services/web/secondary/terraform.tfstate"
     region = "ap-northeast-2"
 
     dynamodb_table = "terraform-wonsoong"
@@ -16,13 +16,13 @@ provider "aws" {
 
 
 module "db_secrets" {
-  source      = "../../../../global/secrets"
+  source      = "github.com/Mike5941/aws_dr-sub//global/secrets"
   secret_name = "MyDatabaseSecret"
 }
 
 
 module "secondary_webserver" {
-  source = "../../../../../modules/services/web"
+  source = "github.com/Mike5941/aws_dr-modules//modules/services/web"
 
   providers = {
     aws = aws.secondary
@@ -30,7 +30,7 @@ module "secondary_webserver" {
 
   cluster_name         = "webservers-secondary"
   remote_state_bucket  = "terraform-wonsoong"
-  vpc_remote_state_key = "stage/network/secondary/terraform.tfstate"
+  vpc_remote_state_key = "prod/network/secondary/terraform.tfstate"
   private_ip           = "10.2.1.100"
   max_size = 1
   min_size = 0

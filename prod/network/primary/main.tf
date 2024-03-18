@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "terraform-wonsoong"
-    key    = "stage/network/primary/terraform.tfstate"
+    key    = "prod/network/primary/terraform.tfstate"
     region = "ap-northeast-2"
 
     dynamodb_table = "terraform-wonsoong"

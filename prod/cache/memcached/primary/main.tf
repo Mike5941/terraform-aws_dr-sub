@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "terraform-wonsoong"
-    key    = "stage/cache/memcached/terraform.tfstate"
+    key    = "prod/cache/memcached/terraform.tfstate"
     region = "ap-northeast-2"
 
     dynamodb_table = "terraform-wonsoong"
@@ -14,17 +14,14 @@ provider "aws" {
   alias  = "primary"
 }
 
-
 module "primary_cache" {
-  source = "../../../../../modules/cache/memcached"
+  source = "github.com/Mike5941/aws_dr-modules//modules/cache/memcached"
 
   providers = {
   }
 
   cluster_id = "primary-memcached"
 
-  web_remote_state_key = "stage/services/web/primary/terraform.tfstate"
-  vpc_remote_state_key = "stage/network/primary/terraform.tfstate"
+  web_remote_state_key = "prod/services/web/primary/terraform.tfstate"
+  vpc_remote_state_key = "prod/network/primary/terraform.tfstate"
 }
-
-

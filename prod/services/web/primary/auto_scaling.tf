@@ -11,7 +11,7 @@ terraform {
 
 module "db_secrets" {
   source      = "github.com/Mike5941/aws_dr-sub//global/secrets"
-  secret_name = "MyDatabaseSecret"
+  secret_name = "prod/database/MySQL"
 }
 
 module "primary_webserver" {

@@ -43,5 +43,5 @@ jobs:
         working-directory: ./prod/services/web/primary
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform destroy -auto-approve
         working-directory: ./prod/services/web/primary

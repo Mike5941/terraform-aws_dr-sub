@@ -1,7 +1,7 @@
 name: Create RDS
 on:
   workflow_run:
-    workflows: ["Create WAS"]
+    workflows: ["Create VPC"]
     types:
       - completed
     branches: [main]
@@ -47,6 +47,5 @@ jobs:
         working-directory: ./prod/database/mysql
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve
         working-directory: ./prod/database/mysql

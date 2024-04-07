@@ -1,7 +1,7 @@
 name: Create WAS
 on:
   workflow_run:
-    workflows: ["Create Cache"]
+    workflows: ["Create RDS"]
     types:
       - completed
     branches: [main]
@@ -48,6 +48,5 @@ jobs:
         working-directory: ./prod/services/web/primary
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve
         working-directory: ./prod/services/web/primary

@@ -1,6 +1,10 @@
 name: Create Cache
 on:
-  push
+  workflow_run:
+    workflows: ["Create WAS"]
+    types:
+      - completed
+    branches: [main]
 
 permissions:
   id-token: write
@@ -9,6 +13,7 @@ permissions:
 jobs:
   Cache:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -43,6 +48,5 @@ jobs:
         working-directory: ./prod/cache/memcached/primary
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve
         working-directory: ./prod/cache/memcached/primary

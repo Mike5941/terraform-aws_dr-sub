@@ -15,18 +15,18 @@ module "db_secrets" {
 }
 
 module "primary_webserver" {
-  source     = "github.com/Mike5941/aws_dr-modules//modules/services/web"
-  depends_on = [module.db_secrets]
+  source               = "github.com/Mike5941/aws_dr-modules//modules/services/web"
+  depends_on           = [module.db_secrets]
   cluster_name         = "webserver-primary"
   remote_state_bucket  = "terraform-wonsoong"
   vpc_remote_state_key = "prod/network/primary/terraform.tfstate"
   private_ip           = "10.1.1.100"
   max_size             = 1
   min_size             = 1
-#  listener_port = 81
-  record_id = "primary-set"
+  #  listener_port = 81
+  record_id         = "primary-set"
   route_policy_type = "PRIMARY"
-  health_check_id = aws_route53_health_check.example.id
+  health_check_id   = aws_route53_health_check.example.id
 
   db_username = module.db_secrets.db_credentials["username"]
   db_password = module.db_secrets.db_credentials["password"]
@@ -36,17 +36,17 @@ module "primary_webserver" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "synthetics_alarm_bottari_canary_1" {
-  alarm_name                = "Synthetics-Alarm-bottari-canary"
-  comparison_operator       = "LessThanThreshold"
-  evaluation_periods        = 1
-  metric_name               = "SuccessPercent"
-  namespace                 = "CloudWatchSynthetics"
-  period                    = 300
-  statistic                 = "Average"
-  threshold                 = 90
-  alarm_description         = "Alarm when SuccessPercent is less than 90%"
-  datapoints_to_alarm       = 1
-  treat_missing_data        = "missing"
+  alarm_name          = "Synthetics-Alarm-bottari-canary"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "SuccessPercent"
+  namespace           = "CloudWatchSynthetics"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 90
+  alarm_description   = "Alarm when SuccessPercent is less than 90%"
+  datapoints_to_alarm = 1
+  treat_missing_data  = "missing"
 
   dimensions = {
     CanaryName = "pilotlight-canary"
@@ -62,10 +62,10 @@ resource "aws_cloudwatch_metric_alarm" "synthetics_alarm_bottari_canary_1" {
 }
 
 resource "aws_route53_health_check" "example" {
-  type              = "CLOUDWATCH_METRIC"
+  type = "CLOUDWATCH_METRIC"
 
-  cloudwatch_alarm_name   = aws_cloudwatch_metric_alarm.synthetics_alarm_bottari_canary_1.alarm_name
-  cloudwatch_alarm_region = "ap-northeast-2"
+  cloudwatch_alarm_name           = aws_cloudwatch_metric_alarm.synthetics_alarm_bottari_canary_1.alarm_name
+  cloudwatch_alarm_region         = "ap-northeast-2"
   insufficient_data_health_status = "Healthy"
 
   tags = {

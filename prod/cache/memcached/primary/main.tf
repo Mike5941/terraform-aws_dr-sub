@@ -18,7 +18,7 @@ module "primary_cache" {
   source = "github.com/Mike5941/aws_dr-modules//modules/cache/memcached"
 
   providers = {
-    aws.primary
+    aws = aws.primary
   }
 
   cluster_id = "primary-memcached"

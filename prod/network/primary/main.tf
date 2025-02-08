@@ -1,18 +1,16 @@
 terraform {
-  backend "s3" {
-    bucket = "terraform-wonsoong"
-    key    = "prod/network/primary/terraform.tfstate"
-    region = "ap-northeast-2"
+  backend "remote" {
+    organization = "wonsoong"
 
-    dynamodb_table = "terraform-wonsoong"
-    encrypt        = true
+    workspaces {
+      name = "terraform-aws_dr-sub"
+    }
   }
 }
 
 module "primary" {
-  source = "github.com/Mike5941/aws_dr-modules//modules/network"
-
-
+  source  = "app.terraform.io/wonsoong/module/vpc"
+  version = "1.0.3"
   project_name = "primary"
   vpc_cidr     = "10.1.0.0/16"
 }
